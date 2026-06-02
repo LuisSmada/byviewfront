@@ -28,8 +28,6 @@ export default function UploadPage() {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // --- LOGIQUE METIER ---
-
   const handleValidate = () => {
     if (!file) return;
     setIsLoading(true);
@@ -52,7 +50,6 @@ export default function UploadPage() {
 
   const validateAndSetFile = (f: File) => {
     setError(null);
-    // Validation simple extension
     if (!f.name.match(/\.(csv|xlsx|xls)$/i)) {
       setError("Format non supporté (CSV/Excel uniquement)");
       return;
@@ -60,7 +57,6 @@ export default function UploadPage() {
     setFile(f);
   };
 
-  // --- EVENTS HANDLERS ---
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) validateAndSetFile(e.target.files[0]);
     e.target.value = "";
@@ -83,22 +79,19 @@ export default function UploadPage() {
     setFile(null);
   };
 
-  // --- RENDU CONDITIONNEL ---
 
-  // Si on est en mode dashboard, on affiche le tableau
   if (view === "dashboard") {
     return (
       <SmartTable
         data={parsedData}
         onBack={() => {
           setView("upload");
-          setFile(null); // Reset optionnel
+          setFile(null); 
         }}
       />
     );
   }
 
-  // Sinon, on affiche l'upload (Ton code original nettoyé)
   return (
     <motion.div
       exit={{ opacity: 0 }}
@@ -133,7 +126,7 @@ export default function UploadPage() {
               )}
             </div>
 
-            {/* ZONE DE DROP */}
+            {/* DROPZONE */}
             <div
               className={cn(
                 "group relative flex h-52 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all duration-300",
