@@ -13,8 +13,6 @@ type ChatRequestBody = {
   data: Record<string, any>[];
 };
 
-// INITIALISATION DU CLIENT
-// Assure-toi que ta clé GEMINI_API_KEY est bien dans .env.local
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function POST(req: Request) {
@@ -22,15 +20,14 @@ export async function POST(req: Request) {
     const body = (await req.json()) as ChatRequestBody;
     const { messages, data } = body;
 
-    // 1. Contexte réduit pour le quota gratuit (500 lignes)
+    // 500 lignes version gratuite
     const dataPreview = data.slice(0, 500);
     const headers = Object.keys(data[0] || {}).join(", ");
 
     const lastUserMessage =
       messages.length > 0 ? messages[messages.length - 1].content : "Analyse.";
 
-    // 2. Le Prompt "Contrôleur"
-    // On force Gemini à répondre en JSON strict pour piloter l'UI
+    // Reponse en JSON
     const fullPrompt = `
       CONTEXTE :
       Tu es le copilote de l'application BYVIEW. Tu peux contrôler l'interface du tableau.
@@ -68,7 +65,7 @@ export async function POST(req: Request) {
       "${lastUserMessage}"
     `;
 
-    // 3. Appel Gemini
+    //Appel Gemini
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
