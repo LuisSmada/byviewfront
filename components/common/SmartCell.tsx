@@ -1,5 +1,3 @@
-// src/components/dashboard/SmartCell.tsx
-
 import { StatusBadge } from "./StatusBadge";
 
 interface SmartCellProps {
@@ -10,12 +8,12 @@ interface SmartCellProps {
 export const SmartCell = ({ header, value }: SmartCellProps) => {
   const normalizeHeader = header.toLowerCase().trim();
 
-  // 1. Détection de Statut
+  // Detection statut
   if (["statut", "status", "état", "state", "etat"].includes(normalizeHeader)) {
     return <StatusBadge status={value} />;
   }
 
-  // 2. Détection de Montant (Devise)
+  // Detection montant et devise
   if (
     value &&
     (value.toString().includes("€") || value.toString().includes("$"))
@@ -25,7 +23,7 @@ export const SmartCell = ({ header, value }: SmartCellProps) => {
     );
   }
 
-  // 3. Détection d'Email (Bonus)
+  // Detection email
   if (value && value.toString().includes("@")) {
     return (
       <span className="text-indigo-600 underline decoration-indigo-200 underline-offset-2">
@@ -34,6 +32,5 @@ export const SmartCell = ({ header, value }: SmartCellProps) => {
     );
   }
 
-  // 4. Par défaut
   return <span className="text-slate-600">{value}</span>;
 };
