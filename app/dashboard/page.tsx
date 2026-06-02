@@ -12,17 +12,16 @@ import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
   const [openAIDrawer, setOpenAIDrawer] = useState(false);
-  const { data, filename } = useCsvStore(); // On lit les données
+  const { data, filename } = useCsvStore(); 
   const router = useRouter();
 
-  // Sécurité : Si pas de données, retour à l'accueil
   useEffect(() => {
     if (data.length === 0) {
       router.push("/");
     }
   }, [data, router]);
 
-  if (data.length === 0) return null; // ou un loader
+  if (data.length === 0) return null; 
 
   return (
     <>
