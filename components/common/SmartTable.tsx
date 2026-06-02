@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { TCsvData, AICommand } from "@/lib/types";
 import { Card } from "../ui/card";
 import { SmartCell } from "./SmartCell";
-import { AIButton } from "./AIButton"; // Assure-toi que le chemin est bon
+import { AIButton } from "./AIButton"; 
 import {
   ArrowUpDown,
   Filter,
@@ -39,39 +39,33 @@ interface SmartTableProps {
 }
 
 export const SmartTable = ({ data, onBack }: SmartTableProps) => {
-  // --- STATE ---
   const [sortCol, setSortCol] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isSortOpen, setIsSortOpen] = useState(false);
 
-  // --- LOGIC ---
   const headers = Object.keys(data[0] || {});
 
-  // Détection colonne Statut
   const statusColumn = headers.find((h) =>
     ["statut", "status", "état", "state"].includes(h.toLowerCase()),
   );
 
-  // Valeurs uniques pour le filtre
   const uniqueStatuses = useMemo(() => {
     if (!statusColumn) return [];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - On sait que row[statusColumn] existe
+    // @ts-ignore
     const statuses = new Set(data.map((row) => row[statusColumn] as string));
     return Array.from(statuses).filter(Boolean);
   }, [data, statusColumn]);
 
-  // --- MOTEUR DE TRI ET FILTRE ---
+  // Sort et filter
   const processedData = useMemo(() => {
     let result = [...data];
 
-    // 1. Filtre
     if (statusColumn && filterStatus !== "all") {
       result = result.filter((row) => row[statusColumn] === filterStatus);
     }
 
-    // 2. Tri
     if (sortCol) {
       result.sort((a, b) => {
         const valA = a[sortCol]?.toString().toLowerCase() || "";
@@ -93,7 +87,6 @@ export const SmartTable = ({ data, onBack }: SmartTableProps) => {
     return result;
   }, [data, filterStatus, sortCol, sortOrder, statusColumn]);
 
-  // --- IA CONTROLLER (Le Cerveau) ---
   const handleAICommand = (cmd: AICommand) => {
     console.log("🤖 Action IA reçue:", cmd);
 
@@ -150,7 +143,7 @@ export const SmartTable = ({ data, onBack }: SmartTableProps) => {
           </Button>
         )}
 
-        {/* 1. FILTRE */}
+        {/* FILTRE */}
         {statusColumn && (
           <div className="flex flex-col gap-1.5 w-full sm:w-[200px]">
             <label className="text-xs font-semibold uppercase text-ui-textMuted flex items-center gap-1">
@@ -172,7 +165,7 @@ export const SmartTable = ({ data, onBack }: SmartTableProps) => {
           </div>
         )}
 
-        {/* 2. TRI (Popover) */}
+        {/* TRI popover */}
         <div className="flex flex-col gap-1.5 w-full sm:w-auto">
           <label className="text-xs font-semibold uppercase text-ui-textMuted flex items-center gap-1">
             <ArrowUpDown className="w-3 h-3" /> Trier par
@@ -315,7 +308,6 @@ export const SmartTable = ({ data, onBack }: SmartTableProps) => {
                         key={`${index}-${header}`}
                         className="whitespace-nowrap py-3 px-6"
                       >
-                        {/* On cast en string car SmartCell attend un string */}
                         <SmartCell
                           header={header}
                           value={row[header] as string}
@@ -339,7 +331,6 @@ export const SmartTable = ({ data, onBack }: SmartTableProps) => {
         </div>
       </Card>
 
-      {/* INTEGRATION DU BOUTON IA */}
       <AIButton data={data} onCommand={handleAICommand} />
     </div>
   );
