@@ -1,4 +1,3 @@
-// src/components/dashboard/StatusBadge.tsx
 import { cn } from "../../lib/utils";
 
 interface StatusBadgeProps {
@@ -8,8 +7,7 @@ interface StatusBadgeProps {
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const s = status.toLowerCase();
 
-  // Logique de couleur
-  let styles = "bg-slate-100 text-slate-700 border-slate-200"; // Gris par défaut
+  let styles = "bg-slate-100 text-slate-700 border-slate-200"; 
 
   if (
     s.includes("payé") ||
