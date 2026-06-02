@@ -44,7 +44,7 @@ export const AIButton = ({ data, onCommand }: AIButtonProps) => {
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll
+  // Auto scroll
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -72,23 +72,17 @@ export const AIButton = ({ data, onCommand }: AIButtonProps) => {
 
       const json = await response.json();
 
-      // --- PARSING JSON STRICT ---
       try {
-        // On essaie de parser la réponse comme un objet JSON structuré
         const parsedAI = JSON.parse(json.content) as AIResponse;
-
-        // 1. Affiche le message
         setMessages((prev) => [
           ...prev,
           { role: "ai", content: parsedAI.message },
         ]);
 
-        // 2. Exécute la commande si elle existe
         if (parsedAI.command && parsedAI.command.type !== "NONE") {
           onCommand(parsedAI.command);
         }
       } catch (e) {
-        // Si l'IA a répondu en texte brut (Markdown) sans JSON
         console.warn("Parsing JSON impossible, affichage texte brut", e);
         setMessages((prev) => [...prev, { role: "ai", content: json.content }]);
       }
